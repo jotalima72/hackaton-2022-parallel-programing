@@ -31,7 +31,7 @@ void bruteForce(char *pass)
     int base = END_CHAR - START_CHAR + 2;
 
     int size = strlen(pass);
-
+    
     printf("Try to broke the password: %s\n", pass);
 
     for (int i = 0; i < size; i++)
@@ -44,7 +44,7 @@ void bruteForce(char *pass)
     char s[MAXIMUM_PASSWORD];
     int flag = 0;
     time_t t1, t2;
-    double dif;
+    double dif, x, speedup;
 
     time(&t1);
 
@@ -60,7 +60,7 @@ void bruteForce(char *pass)
             printf("Password in decimal base: %lli\n", j);
             while (j > 0)
             {
-                s[index++] = 'a' + j % base - 1;
+                s[index++] = START_CHAR + j % base - 1;
                 j /= base;
             }
             s[index] = '\0';
@@ -72,7 +72,34 @@ void bruteForce(char *pass)
         {
             dif = difftime(t2, t1);
             printf("\n%1.2f seconds\n", dif);
-            exit(1);
+
+            FILE *fptr;
+            FILE *fptr1;
+            char c[1000];
+
+            if ((fptr1 = fopen("firstValue.dat", "r")) != NULL)
+            {
+                fscanf(fptr1, "%[^\n]", c);
+                x = atof(c);
+
+                speedup = x / dif;
+
+                fclose(fptr1);
+            }
+
+            if ((fptr = fopen("speedup.dat", "a+")) != NULL)
+            {
+                fprintf(fptr, "%d\t%1.2f\n", omp_get_max_threads(), speedup);
+                fclose(fptr);
+            }
+            else
+            {
+                fopen("speedup.dat", "w+");
+                fprintf(fptr, "%d\t%1.2f\n", omp_get_max_threads(), speedup);
+                fclose(fptr);
+            }
+
+            exit(0);
         }
     }
 }
@@ -81,9 +108,6 @@ int main(int argc, char **argv)
 {
     char password[MAXIMUM_PASSWORD];
     strcpy(password, argv[1]);
-    time_t t1, t2;
-
     bruteForce(password);
-
     return 0;
 }
