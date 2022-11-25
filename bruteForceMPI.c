@@ -100,7 +100,6 @@ int main(int argc, char **argv)
     {
       numInit = (max / (numberOfProcessors)) * (to);
       numEnd = (max / (numberOfProcessors)) * (to + 1);
-      // printf("id(%d) : %lli -> %lli\n",to,numInit, numEnd);
       MPI_Send(&numInit, 1, MPI_LONG, to, tag, MPI_COMM_WORLD);
       MPI_Send(&numEnd, 1, MPI_LONG, to, tag, MPI_COMM_WORLD);
     }
