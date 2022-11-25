@@ -88,8 +88,8 @@ int main(int argc, char **argv)
     time(&t1);
     printf("Try to broke the password: %s\n", password);
     bruteForce<<<number_of_blocks, threads_per_block>>>(pass_d);
-    cudaDeviceSynchronize();
     time(&t2);
+    cudaDeviceSynchronize();
 
     dif = difftime(t2, t1);
 
