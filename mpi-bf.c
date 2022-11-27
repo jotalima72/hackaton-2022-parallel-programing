@@ -21,10 +21,10 @@ long long my_pow(long long x, int y)
     return x * my_pow(x, y - 1);
 }
 
-void bruteForce(char *pass, long long int numInit, long long int numEnd)
+void bruteForce(char *pass, long long int numInit, long long int numEnd, int numberOfProcessors)
 {
   time_t t1, t2;
-  double dif;
+  double dif, x, speedup;
   int flag = 0, pass_b26[MAXIMUM_PASSWORD];
   long long int j;
   long long int pass_decimal = 0;
@@ -132,14 +132,14 @@ int main(int argc, char **argv)
     }
     numInit = 0;
     numEnd = (max / (numberOfProcessors));
-    bruteForce(password, numInit, numEnd);
+    bruteForce(password, numInit, numEnd, numberOfProcessors);
     time(&t2);
   }
   else
   {
     MPI_Recv(&numInit, 1, MPI_LONG, 0, tag, MPI_COMM_WORLD, &status);
     MPI_Recv(&numEnd, 1, MPI_LONG, 0, tag, MPI_COMM_WORLD, &status);
-    bruteForce(password, numInit, numEnd);
+    bruteForce(password, numInit, numEnd, numberOfProcessors);
     time(&t2);
   }
 
