@@ -113,7 +113,6 @@ int main(int argc, char **argv)
     bruteForce(password, numInit, numEnd);
     time(&t2);
   }
-
   
   MPI_Abort(MPI_COMM_WORLD, 0);
   MPI_Finalize();

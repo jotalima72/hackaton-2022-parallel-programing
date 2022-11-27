@@ -1,31 +1,30 @@
-#!/bin/bash
-
-#Sequencial
-#gcc bfSequencial.c -o bfseq -std=c99 -O3
-#./bfseq "$1"
-
-#OMP
+#!/bin/sh
+gcc sequencial-bf.c -o bfseq -std=c99 -O3
+mpicc mpi-bf.c -o bfmpi -std=c99 -O3
 gcc omp-bf.c -o bfomp -fopenmp -lm -std=c99 -O3
 
-#CUDA
-nvcc cuda-bf.cu -o bfcuda
+if [[ ! -f "firstValue.dat" ]]; then
+  echo codigo sequencial
+  ./bfseq "$1"
+fi
 
 if [[  -f "speedup.dat" ]]; then
 rm -rf speedup.dat
 fi
 
-if [[  -f "speedup_cuda.dat" ]]; then
-rm -rf speedup_cuda.dat
+if [[  -f "speedupMPI.dat" ]]; then
+  rm -rf speedupMPI.dat
 fi
 
-for((i = 2; i <= 128; i*=2))
+
+for((i = 2; i <=64; i*=2))
 do
-    echo OMP "$i"
+  echo opemMP thread "$i"
     OMP_NUM_THREADS=$i ./bfomp "$1"
 done
 
-for((i = 2; i <= 1024; i*=2))
+for((i = 2; i <=64; i*=2))
 do
-    echo CUDA "$i"
-    ./bfcuda "$1" "$i"
+    echo MPI processo "$i"
+    mpirun -x MXM_LOG_LEVEL=error -quiet -np $i --allow-run-as-root ./bfmpi "$1"
 done
