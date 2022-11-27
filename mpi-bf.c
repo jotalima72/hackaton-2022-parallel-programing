@@ -60,8 +60,35 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd)
     }
     if (flag == 1)
     {
+
       time(&t2);
       dif = difftime(t2, t1);
+      FILE *fptr;
+      FILE *fptr1;
+      char c[1000];
+      
+
+      if ((fptr1 = fopen("firstValue.dat", "r")) != NULL)
+      {
+        fscanf(fptr1, "%[^\n]", c);
+        x = atof(c);
+        
+        speedup = x/dif;
+        
+        fclose(fptr1);
+      }
+
+      if ((fptr = fopen("speedupMPI.dat", "a+")) != NULL)
+      {
+        fprintf(fptr, "%d\t%1.2f\n", numberOfProcessors, speedup);
+        fclose(fptr);
+      }
+      else{
+        fopen("speedupMPI.dat", "w+");
+        fprintf(fptr, "%d\t%1.2f\n", numberOfProcessors, speedup);
+        fclose(fptr);
+      }
+      
 
       printf("\n%1.2f seconds\n", dif);
 
