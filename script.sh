@@ -15,11 +15,11 @@ fi
 
 
 if [[  -f "speedupCUDA.dat" ]]; then
-rm -rf speedupOMP.dat
+rm -rf speedupCUDA.dat
 fi
 
 if [[  -f "speedupMPI.dat" ]]; then
-  rm -rf speedupCUDA.dat
+  rm -rf speedupMPI.dat
 fi
 
 
@@ -42,5 +42,5 @@ for((i = 2; i <=64; i*=2))
 do
     echo ===========================================
     echo MPI  "$i" processos
-    mpirun -x MXM_LOG_LEVEL=error quiet -np $i --allow-run-as-root ./bruteForce-mpi "$1"
+    mpirun -x MXM_LOG_LEVEL=error quiet -np $i --allow-run-as-root ./bfmpi "$1"
 done
