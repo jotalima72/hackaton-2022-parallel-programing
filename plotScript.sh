@@ -4,7 +4,7 @@ gnuplot <<EOF
 set terminal png font 'Times new roman'
 set grid
 unset key
-set output 'OMP.png'
+set output 'OMP-$1.png'
 
 set style line 1 lt 2 lc rgb "cyan"   lw 2 
 set style line 2 lt 2 lc rgb "red"    lw 2
@@ -24,7 +24,7 @@ gnuplot <<EOF
 set terminal png font 'Times new roman'
 set grid
 unset key
-set output 'MPI.png'
+set output 'MPI-$1.png'
 
 set style line 1 lt 2 lc rgb "red"   lw 2 
 set style line 2 lt 2 lc rgb "cyan"    lw 2
@@ -45,7 +45,7 @@ gnuplot <<EOF
 set terminal png font 'Times new roman'
 set grid
 unset key
-set output 'CUDA.png'
+set output 'CUDA-$1.png'
 
 set style line 1 lt 2 lc rgb "gold"   lw 2 
 set style line 2 lt 2 lc rgb "red"    lw 2

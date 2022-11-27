@@ -1,12 +1,12 @@
 #!/bin/sh
-gcc bruteForce.c -o bruteForce -std=c99 -O3
-mpicc bruteForce-mpi.c -o bruteForce-mpi -std=c99 -O3
-gcc bruteForce-omp.c -o bfomp -fopenmp -lm -std=c99 -O3
-nvcc bfcuda.cu -o bfcuda
+gcc sequencial-bf.c -o bfseq -std=c99 -O3
+mpicc mpi-bf.c -o bfmpi -std=c99 -O3
+gcc omp-bf.c -o bfomp -fopenmp -lm -std=c99 -O3
+nvcc cuda-bf.cu -o bfcuda
 
 if [[ ! -f "firstValue.dat" ]]; then
   echo codigo sequencial
-  ./bruteForce "$1"
+  ./bfseq "$1"
 fi
 
 if [[  -f "speedupOMP.dat" ]]; then
@@ -42,5 +42,5 @@ for((i = 2; i <=64; i*=2))
 do
     echo ===========================================
     echo MPI  "$i" processos
-    mpirun -quiet -np $i --allow-run-as-root ./bruteForce-mpi "$1"
+    mpirun -x MXM_LOG_LEVEL=error quiet -np $i --allow-run-as-root ./bruteForce-mpi "$1"
 done
