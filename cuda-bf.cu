@@ -33,7 +33,7 @@ __device__ int my_strlen(char *s)
 
 __global__ void bruteForce(char *pass)
 {
-  
+
     int pass_b26[MAXIMUM_PASSWORD];
 
     long long int j = blockIdx.x * blockDim.x + threadIdx.x;
@@ -49,7 +49,7 @@ __global__ void bruteForce(char *pass)
     long long int max = my_pow(base, size);
     char s[MAXIMUM_PASSWORD];
 
-    for (; j < max; j+= blockDim.x * gridDim.x)
+    for (; j < max; j += blockDim.x * gridDim.x)
     {
         if (j == pass_decimal)
         {
@@ -72,10 +72,10 @@ __global__ void bruteForce(char *pass)
 int main(int argc, char **argv)
 {
     char password[MAXIMUM_PASSWORD], *pass_d;
-   
+
     strcpy(password, argv[1]);
     time_t t1, t2;
-    double dif;
+    double dif, x, speedup;
     cudaMalloc(&pass_d, sizeof(char) * MAXIMUM_PASSWORD);
     cudaMemcpy(pass_d, password, sizeof(char) * MAXIMUM_PASSWORD, cudaMemcpyHostToDevice);
 
@@ -92,7 +92,31 @@ int main(int argc, char **argv)
     time(&t2);
 
     dif = difftime(t2, t1);
+    FILE *fptr;
+    FILE *fptr1;
+    char c[1000];
 
+    if ((fptr1 = fopen("firstValue.dat", "r")) != NULL)
+    {
+        fscanf(fptr1, "%[^\n]", c);
+        x = atof(c);
+
+        speedup = x / dif;
+
+        fclose(fptr1);
+    }
+
+    if ((fptr = fopen("speedupCUDA.dat", "a+")) != NULL)
+    {
+        fprintf(fptr, "%d\t%1.2f\n", threads_per_block, speedup);
+        fclose(fptr);
+    }
+    else
+    {
+        fopen("speedupCUDA.dat", "w+");
+        fprintf(fptr, "%d\t%1.2f\n", threads_per_block, speedup);
+        fclose(fptr);
+    }
     printf("\n%1.2f seconds\n", dif);
     return 0;
 }
