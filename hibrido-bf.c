@@ -8,7 +8,7 @@
 // 65 to 90 use only capital letters
 // 48 to 57 use only numbers
 
-#define START_CHAR 97
+#define START_CHAR 48
 #define END_CHAR 122
 #define MAXIMUM_PASSWORD 20
 
@@ -40,7 +40,7 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd)
 
   long long int max = my_pow(base, size);
   char s[MAXIMUM_PASSWORD];
-
+#pragma omp parallel for private(j) firstprivate(numInit, numEnd)
   for (j = numInit; j < numEnd; j++)
   {
     if (j == pass_decimal)
@@ -57,16 +57,14 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd)
       s[index] = '\0';
       printf("Found password: %s\n", s);
       flag = 1;
+      time(&t2);
+      dif = difftime(t2, t1);
+      printf("\n%1.2f seconds\n", dif);
     }
     if (flag == 1)
     {
-      time(&t2);
-      dif = difftime(t2, t1);
-
-      printf("\n%1.2f seconds\n", dif);
-
       MPI_Abort(MPI_COMM_WORLD, 0);
-      break;
+      exit(0);
     }
   }
 }
@@ -116,10 +114,7 @@ int main(int argc, char **argv)
     time(&t2);
   }
 
-  dif = difftime(t2, t1);
-
-  printf("\n%1.2f seconds\n", dif);
-
+  
   MPI_Abort(MPI_COMM_WORLD, 0);
   MPI_Finalize();
   return 0;

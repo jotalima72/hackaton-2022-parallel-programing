@@ -4,12 +4,11 @@
 #include <time.h>
 #include <math.h>
 #include <mpi.h>
-#include <omp.h>
 // 97 to 122 use only lowercase letters
 // 65 to 90 use only capital letters
 // 48 to 57 use only numbers
 
-#define START_CHAR 97
+#define START_CHAR 48
 #define END_CHAR 122
 #define MAXIMUM_PASSWORD 20
 
@@ -42,7 +41,6 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd)
   long long int max = my_pow(base, size);
   char s[MAXIMUM_PASSWORD];
 
-#pragma omp parallel for private(j)
   for (j = numInit; j < numEnd; j++)
   {
     if (j == pass_decimal)
@@ -68,7 +66,7 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd)
       printf("\n%1.2f seconds\n", dif);
 
       MPI_Abort(MPI_COMM_WORLD, 0);
-      exit(0);
+      break;
     }
   }
 }
@@ -102,7 +100,6 @@ int main(int argc, char **argv)
     {
       numInit = (max / (numberOfProcessors)) * (to);
       numEnd = (max / (numberOfProcessors)) * (to + 1);
-      // printf("id(%d) : %lli -> %lli\n",to,numInit, numEnd);
       MPI_Send(&numInit, 1, MPI_LONG, to, tag, MPI_COMM_WORLD);
       MPI_Send(&numEnd, 1, MPI_LONG, to, tag, MPI_COMM_WORLD);
     }

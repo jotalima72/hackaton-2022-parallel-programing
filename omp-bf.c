@@ -9,7 +9,7 @@
 // 65 to 90 use only capital letters
 // 48 to 57 use only numbers
 
-#define START_CHAR 97
+#define START_CHAR 48
 #define END_CHAR 122
 #define MAXIMUM_PASSWORD 20
 
@@ -31,7 +31,7 @@ void bruteForce(char *pass)
     int base = END_CHAR - START_CHAR + 2;
 
     int size = strlen(pass);
-    
+
     printf("Try to broke the password: %s\n", pass);
 
     for (int i = 0; i < size; i++)
@@ -67,9 +67,6 @@ void bruteForce(char *pass)
             printf("Found password: %s\n", s);
             time(&t2);
             flag = 1;
-        }
-        if (flag == 1)
-        {
             dif = difftime(t2, t1);
             printf("\n%1.2f seconds\n", dif);
 
@@ -98,7 +95,9 @@ void bruteForce(char *pass)
                 fprintf(fptr, "%d\t%1.2f\n", omp_get_max_threads(), speedup);
                 fclose(fptr);
             }
-
+        }
+        if (flag == 1)
+        {
             exit(0);
         }
     }

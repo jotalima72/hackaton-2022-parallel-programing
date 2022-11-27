@@ -33,7 +33,7 @@ __device__ int my_strlen(char *s)
 
 __global__ void bruteForce(char *pass)
 {
-
+  
     int pass_b26[MAXIMUM_PASSWORD];
 
     long long int j = blockIdx.x * blockDim.x + threadIdx.x;
@@ -49,7 +49,7 @@ __global__ void bruteForce(char *pass)
     long long int max = my_pow(base, size);
     char s[MAXIMUM_PASSWORD];
 
-    for (; j < max; j += blockDim.x * gridDim.x)
+    for (; j < max; j+= blockDim.x * gridDim.x)
     {
         if (j == pass_decimal)
         {
@@ -72,7 +72,7 @@ __global__ void bruteForce(char *pass)
 int main(int argc, char **argv)
 {
     char password[MAXIMUM_PASSWORD], *pass_d;
-
+   
     strcpy(password, argv[1]);
     time_t t1, t2;
     double dif;
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
     cudaGetDevice(&deviceId);
     cudaDeviceGetAttribute(&numberOfSMs, cudaDevAttrMultiProcessorCount, deviceId);
     int number_of_blocks = numberOfSMs * 32;
-    int threads_per_block = 1024;
+    int threads_per_block = atoi(argv[2]);
 
     time(&t1);
     printf("Try to broke the password: %s\n", password);
