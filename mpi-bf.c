@@ -94,7 +94,7 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd, int num
         fclose(fptr);
       }
 
-      printf("\n%1.2f seconds\n", dif);
+      printf("\n%1.2lf seconds\n", dif);
 
       MPI_Abort(MPI_COMM_WORLD, 0);
       break;
@@ -151,9 +151,8 @@ int main(int argc, char **argv)
   if (dif < 0)
   {
     printf("\n%1.2f seconds\n", dif);
-
-    MPI_Abort(MPI_COMM_WORLD, 0);
-    MPI_Finalize();
   }
+  MPI_Abort(MPI_COMM_WORLD, 0);
+  MPI_Finalize();
   return 0;
 }
