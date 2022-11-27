@@ -56,3 +56,5 @@ bfomp
 bfompi
 bfmpi
 bfcuda
+*.dat
+*.png

@@ -95,25 +95,31 @@ int main(int argc, char **argv)
     FILE *fptr;
     FILE *fptr1;
     char c[1000];
+    char buffer[50], firstFile[50];
+    sprintf(buffer, "speedupCUDA-%s.dat", password);
+    sprintf(firstFile, "firstValue-%s.dat", password);
 
-    if ((fptr1 = fopen("firstValue.dat", "r")) != NULL)
+    if ((fptr1 = fopen(firstFile, "r")) != NULL)
     {
         fscanf(fptr1, "%[^\n]", c);
         x = atof(c);
-
+        if (dif == 0)
+        {
+            dif = 1;
+        }
         speedup = x / dif;
 
         fclose(fptr1);
     }
 
-    if ((fptr = fopen("speedupCUDA.dat", "a+")) != NULL)
+    if ((fptr = fopen(buffer, "a+")) != NULL)
     {
         fprintf(fptr, "%d\t%1.2f\n", threads_per_block, speedup);
         fclose(fptr);
     }
     else
     {
-        fopen("speedupCUDA.dat", "w+");
+        fopen(buffer, "w+");
         fprintf(fptr, "%d\t%1.2f\n", threads_per_block, speedup);
         fclose(fptr);
     }

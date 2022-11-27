@@ -12,8 +12,7 @@
 #define END_CHAR 122
 #define MAXIMUM_PASSWORD 20
 
-    long long
-    my_pow(long long x, int y)
+long long my_pow(long long x, int y)
 {
   long long res = 1;
   if (y == 0)
@@ -77,10 +76,11 @@ int main(int argc, char **argv)
   dif = difftime(t2, t1);
 
   FILE *fp;
-  fp = fopen("firstValue.dat", "w+");
+  char buffer[50];
+  sprintf(buffer, "firstValue-%s.dat", password);
+  fp = fopen(buffer, "w+");
   fprintf(fp, "%1.2f\n", dif);
 
   printf("\n%1.2f seconds\n", dif);
-
   return 0;
 }

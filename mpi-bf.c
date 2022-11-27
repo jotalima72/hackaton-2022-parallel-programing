@@ -4,6 +4,7 @@
 #include <time.h>
 #include <math.h>
 #include <mpi.h>
+
 // 97 to 122 use only lowercase letters
 // 65 to 90 use only capital letters
 // 48 to 57 use only numbers
@@ -41,6 +42,10 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd, int num
   long long int max = my_pow(base, size);
   char s[MAXIMUM_PASSWORD];
 
+  char buffer[50], firstFile[50];
+  sprintf(buffer, "speedupMPI-%s.dat", pass);
+  sprintf(firstFile, "firstValue-%s.dat", pass);
+
   for (j = numInit; j < numEnd; j++)
   {
     if (j == pass_decimal)
@@ -68,7 +73,7 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd, int num
       char c[1000];
       
 
-      if ((fptr1 = fopen("firstValue.dat", "r")) != NULL)
+      if ((fptr1 = fopen(firstFile, "r")) != NULL)
       {
         fscanf(fptr1, "%[^\n]", c);
         x = atof(c);
@@ -78,13 +83,13 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd, int num
         fclose(fptr1);
       }
 
-      if ((fptr = fopen("speedupMPI.dat", "a+")) != NULL)
+      if ((fptr = fopen(buffer, "a+")) != NULL)
       {
         fprintf(fptr, "%d\t%1.2f\n", numberOfProcessors, speedup);
         fclose(fptr);
       }
       else{
-        fopen("speedupMPI.dat", "w+");
+        fopen(buffer, "w+");
         fprintf(fptr, "%d\t%1.2f\n", numberOfProcessors, speedup);
         fclose(fptr);
       }
@@ -144,7 +149,6 @@ int main(int argc, char **argv)
   }
 
   dif = difftime(t2, t1);
-
   printf("\n%1.2f seconds\n", dif);
 
   MPI_Abort(MPI_COMM_WORLD, 0);

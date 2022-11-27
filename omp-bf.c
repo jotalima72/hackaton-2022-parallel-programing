@@ -50,7 +50,9 @@ void bruteForce(char *pass)
   int flag = 0;
   time_t t1, t2;
   double dif, x, speedup;
- 
+  char buffer[50], firstFile[50];
+  sprintf(buffer, "speedupOMP-%s.dat", pass);
+  sprintf(firstFile, "firstValue-%s.dat", pass);
   time (&t1);
 
   
@@ -77,23 +79,22 @@ void bruteForce(char *pass)
       dif = difftime (t2, t1);
       printf("\n%1.2f seconds\n", dif); 
 
-      if ((fptr1 = fopen("firstValue.dat", "r")) != NULL)
+      if ((fptr1 = fopen(firstFile, "r")) != NULL)
       {
         fscanf(fptr1, "%[^\n]", c);
         x = atof(c);
-        
         speedup = x/dif;
         
         fclose(fptr1);
       }
 
-      if ((fptr = fopen("speedupOMP.dat", "a+")) != NULL)
+      if ((fptr = fopen(buffer, "a+")) != NULL)
       {
         fprintf(fptr, "%d\t%1.2f\n", omp_get_max_threads(), speedup);
         fclose(fptr);
       }
       else{
-        fopen("speedupOMP.dat", "w+");
+        fopen(buffer, "w+");
         fprintf(fptr, "%d\t%1.2f\n", omp_get_max_threads(), speedup);
         fclose(fptr);
       }
