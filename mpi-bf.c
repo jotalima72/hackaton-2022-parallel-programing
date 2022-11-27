@@ -71,15 +71,14 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd, int num
       FILE *fptr;
       FILE *fptr1;
       char c[1000];
-      
 
       if ((fptr1 = fopen(firstFile, "r")) != NULL)
       {
         fscanf(fptr1, "%[^\n]", c);
         x = atof(c);
-        
-        speedup = x/dif;
-        
+
+        speedup = x / dif;
+
         fclose(fptr1);
       }
 
@@ -88,12 +87,12 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd, int num
         fprintf(fptr, "%d\t%1.2f\n", numberOfProcessors, speedup);
         fclose(fptr);
       }
-      else{
+      else
+      {
         fopen(buffer, "w+");
         fprintf(fptr, "%d\t%1.2f\n", numberOfProcessors, speedup);
         fclose(fptr);
       }
-      
 
       printf("\n%1.2f seconds\n", dif);
 
@@ -149,9 +148,12 @@ int main(int argc, char **argv)
   }
 
   dif = difftime(t2, t1);
-  printf("\n%1.2f seconds\n", dif);
+  if (dif < 0)
+  {
+    printf("\n%1.2f seconds\n", dif);
 
-  MPI_Abort(MPI_COMM_WORLD, 0);
-  MPI_Finalize();
+    MPI_Abort(MPI_COMM_WORLD, 0);
+    MPI_Finalize();
+  }
   return 0;
 }
