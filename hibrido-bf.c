@@ -40,7 +40,8 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd)
 
   long long int max = my_pow(base, size);
   char s[MAXIMUM_PASSWORD];
-#pragma omp parallel for private(j) firstprivate(numInit, numEnd)
+
+  #pragma omp parallel for private(j)
   for (j = numInit; j < numEnd; j++)
   {
     if (j == pass_decimal)
@@ -57,12 +58,14 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd)
       s[index] = '\0';
       printf("Found password: %s\n", s);
       flag = 1;
-      time(&t2);
-      dif = difftime(t2, t1);
-      printf("\n%1.2f seconds\n", dif);
     }
     if (flag == 1)
     {
+      time(&t2);
+      dif = difftime(t2, t1);
+
+      printf("\n%1.2f seconds\n", dif);
+
       MPI_Abort(MPI_COMM_WORLD, 0);
       exit(0);
     }
@@ -73,7 +76,6 @@ int main(int argc, char **argv)
 {
   char password[MAXIMUM_PASSWORD];
   strcpy(password, argv[1]);
-  time_t t1, t2;
   double dif;
 
   int base = END_CHAR - START_CHAR + 2;
@@ -89,7 +91,6 @@ int main(int argc, char **argv)
   MPI_Comm_rank(MPI_COMM_WORLD, &id);
   MPI_Request request;
   MPI_Status status;
-  time(&t1);
 
   if (id == 0)
   {
@@ -98,23 +99,20 @@ int main(int argc, char **argv)
     {
       numInit = (max / (numberOfProcessors)) * (to);
       numEnd = (max / (numberOfProcessors)) * (to + 1);
+      // printf("id(%d) : %lli -> %lli\n",to,numInit, numEnd);
       MPI_Send(&numInit, 1, MPI_LONG, to, tag, MPI_COMM_WORLD);
       MPI_Send(&numEnd, 1, MPI_LONG, to, tag, MPI_COMM_WORLD);
     }
     numInit = 0;
     numEnd = (max / (numberOfProcessors));
     bruteForce(password, numInit, numEnd);
-    time(&t2);
   }
   else
   {
     MPI_Recv(&numInit, 1, MPI_LONG, 0, tag, MPI_COMM_WORLD, &status);
     MPI_Recv(&numEnd, 1, MPI_LONG, 0, tag, MPI_COMM_WORLD, &status);
     bruteForce(password, numInit, numEnd);
-    time(&t2);
   }
-  
-  MPI_Abort(MPI_COMM_WORLD, 0);
   MPI_Finalize();
   return 0;
 }

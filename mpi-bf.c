@@ -71,14 +71,15 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd, int num
       FILE *fptr;
       FILE *fptr1;
       char c[1000];
+      
 
       if ((fptr1 = fopen(firstFile, "r")) != NULL)
       {
         fscanf(fptr1, "%[^\n]", c);
         x = atof(c);
-
-        speedup = x / dif;
-
+        
+        speedup = x/dif;
+        
         fclose(fptr1);
       }
 
@@ -87,14 +88,14 @@ void bruteForce(char *pass, long long int numInit, long long int numEnd, int num
         fprintf(fptr, "%d\t%1.2f\n", numberOfProcessors, speedup);
         fclose(fptr);
       }
-      else
-      {
+      else{
         fopen(buffer, "w+");
         fprintf(fptr, "%d\t%1.2f\n", numberOfProcessors, speedup);
         fclose(fptr);
       }
+      
 
-      printf("\n%1.2lf seconds\n", dif);
+      printf("\n%1.2f seconds\n", dif);
 
       MPI_Abort(MPI_COMM_WORLD, 0);
       break;
@@ -106,8 +107,6 @@ int main(int argc, char **argv)
 {
   char password[MAXIMUM_PASSWORD];
   strcpy(password, argv[1]);
-  time_t t1, t2;
-  double dif;
 
   int base = END_CHAR - START_CHAR + 2;
   int size = strlen(password);
@@ -122,7 +121,6 @@ int main(int argc, char **argv)
   MPI_Comm_rank(MPI_COMM_WORLD, &id);
   MPI_Request request;
   MPI_Status status;
-  time(&t1);
 
   if (id == 0)
   {
@@ -137,22 +135,13 @@ int main(int argc, char **argv)
     numInit = 0;
     numEnd = (max / (numberOfProcessors));
     bruteForce(password, numInit, numEnd, numberOfProcessors);
-    time(&t2);
   }
   else
   {
     MPI_Recv(&numInit, 1, MPI_LONG, 0, tag, MPI_COMM_WORLD, &status);
     MPI_Recv(&numEnd, 1, MPI_LONG, 0, tag, MPI_COMM_WORLD, &status);
     bruteForce(password, numInit, numEnd, numberOfProcessors);
-    time(&t2);
   }
-
-  dif = difftime(t2, t1);
-  if (dif < 0)
-  {
-    printf("\n%1.2f seconds\n", dif);
-  }
-  MPI_Abort(MPI_COMM_WORLD, 0);
   MPI_Finalize();
   return 0;
 }
