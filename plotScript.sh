@@ -15,7 +15,7 @@ set ylabel "SpeedUp"
 set key top left
 set key box
 set style data lines
-plot "speedupOMP.dat" using 2:xtic(1) title "OMP"    ls 1 with linespoints
+plot "speedupOMP-$1.dat" using 2:xtic(1) title "OMP"    ls 1 with linespoints
 
 EOF
 
@@ -35,7 +35,7 @@ set ylabel "SpeedUp"
 set key top left
 set key box
 set style data lines
-plot "speedupMPI.dat"  using 2:xtic(1) title "MPI"    ls 1 with linespoints
+plot "speedupMPI-$1.dat"  using 2:xtic(1) title "MPI"    ls 1 with linespoints
 
 EOF
 
@@ -56,6 +56,6 @@ set ylabel "SpeedUp"
 set key top left
 set key box
 set style data lines
-plot "speedupCUDA.dat" using 2:xtic(1) title "CUDA"    ls 1 with linespoints
+plot "speedupCUDA-$1.dat" using 2:xtic(1) title "CUDA"    ls 1 with linespoints
 
 EOF

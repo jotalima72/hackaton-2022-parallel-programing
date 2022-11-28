@@ -4,22 +4,23 @@ mpicc mpi-bf.c -o bfmpi -std=c99 -O3
 gcc omp-bf.c -o bfomp -fopenmp -lm -std=c99 -O3
 nvcc cuda-bf.cu -o bfcuda
 
-if [[ ! -f "firstValue.dat" ]]; then
+if [[ ! -f "firstValue-$1.dat" ]]; then
   echo codigo sequencial
-  ./bfseq "$1"
+  ./bruteForce "$1"
 fi
 
-if [[  -f "speedupOMP.dat" ]]; then
-rm -rf speedupOMP.dat
+if [[  -f "speedupOMP-$1.dat" ]]; then
+  echo achei o arquivo
+rm -rf speedupOMP-$1.dat
 fi
 
 
-if [[  -f "speedupCUDA.dat" ]]; then
-rm -rf speedupCUDA.dat
+if [[  -f "speedupCUDA-$1.dat" ]]; then
+rm -rf speedupCUDA-$1.dat
 fi
 
-if [[  -f "speedupMPI.dat" ]]; then
-  rm -rf speedupMPI.dat
+if [[  -f "speedupMPI-$1.dat" ]]; then
+  rm -rf speedupMPI-$1.dat
 fi
 
 
