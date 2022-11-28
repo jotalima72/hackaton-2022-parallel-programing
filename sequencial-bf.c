@@ -41,8 +41,6 @@ void bruteForce(char *pass)
   for (int i = size - 1; i > -1; i--)
     pass_decimal += (long long int)pass_b26[i] * my_pow(base, i);
   char s[MAXIMUM_PASSWORD];
-  printf("max - %lli \n12323213", max);
-  printf("pass - %lli \n", pass_decimal);
 
   for (j = 0; j < max; j++)
   {
